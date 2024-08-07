@@ -13,6 +13,7 @@ class TXTBookLoader(BaseBookLoader):
         model,
         key,
         resume,
+        src_language,
         language,
         model_api_base=None,
         is_test=False,

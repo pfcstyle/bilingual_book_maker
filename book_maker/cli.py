@@ -154,6 +154,15 @@ def main():
         help="use ollama",
     )
     parser.add_argument(
+        "--src_language",
+        type=str,
+        choices=sorted(LANGUAGES.keys())
+        + sorted([k.title() for k in TO_LANGUAGE_CODE]),
+        default="en",
+        metavar="LANGUAGE",
+        help="language to translate from, available: {%(choices)s}",
+    )
+    parser.add_argument(
         "--language",
         type=str,
         choices=sorted(LANGUAGES.keys())
@@ -378,6 +387,10 @@ So you are close to reaching the limit. You have to choose your own value, there
 
     book_loader = BOOK_LOADER_DICT.get(book_type)
     assert book_loader is not None, "unsupported loader"
+    src_language = options.src_language
+    if options.language in LANGUAGES:
+        src_language = LANGUAGES.get(src_language, src_language)
+
     language = options.language
     if options.language in LANGUAGES:
         # use the value for prompt
@@ -395,6 +408,7 @@ So you are close to reaching the limit. You have to choose your own value, there
         translate_model,
         API_KEY,
         options.resume,
+        src_language=src_language,
         language=language,
         model_api_base=model_api_base,
         is_test=options.test,
